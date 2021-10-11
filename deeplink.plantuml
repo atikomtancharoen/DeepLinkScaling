@@ -1,3 +1,30 @@
 @startuml DeepLink
-A -> B : Hello
+!theme blueprint
+App -> CoreMod : process(:deeplink)
+note left: The deeplink should have country \ncode, module name, version\nEx: th/read/v1/<content_id>
+CoreMod -> CoreMod: Get submodule from\ndeeplink
+loop SubMod1..n
+    alt Bool = false
+        CoreMod -> SubMod1..n: submodule.matches(:deeplink)
+        SubMod1..n --> CoreMod: Return false
+    else Bool = true
+        CoreMod -> SubMod1..n: submodule.matches(:deeplink)
+        SubMod1..n --> CoreMod: Return true
+        CoreMod -> CoreMod: Break looping
+    end
+end
+
+alt Bool = false
+    CoreMod -> CoreMod: handle error case
+else Bool = true
+    CoreMod -> SubMod1..n: submodule.execute(:deeplink)
+    alt If the feature is off
+        SubMod1..n -> SubMod1..n: Display error
+    else If not found the content
+        SubMod1..n -> SubMod1..n: Display error
+    else If can display feature
+        SubMod1..n -> SubMod1..n: Display the feature
+    end
+end
+
 @enduml
