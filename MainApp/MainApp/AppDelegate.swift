@@ -20,12 +20,28 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
             appCoordinator = AppCoordinator(window: window)
             appCoordinator.start()
         }
-        let string = """
-        http://trueid.net/detail/O7Mm1qqmXxB7?page=detail&type=article-truelife&slug=news&info={\"content_id\":\"O7Mm1qqmXxB7\",\"api_url\":\"https://cms-fn-dmpapi.trueid.net/cms-fncontentdetail/v2/?id=O7Mm1qqmXxB7\",\"api_url_new\":\"https://cms-fn-dmpapi.trueid.net/cms-fncontentdetail/v2/?id=O7Mm1qqmXxB7\"}
-        """
-        let url = string.addingPercentEncoding(withAllowedCharacters: .urlQueryAllowed) ?? ""
+//        let string = """
+//        http://trueid.net/detail/O7Mm1qqmXxB7?page=detail&type=article-truelife&slug=news&info={\"content_id\":\"O7Mm1qqmXxB7\",\"api_url\":\"https://cms-fn-dmpapi.trueid.net/cms-fncontentdetail/v2/?id=O7Mm1qqmXxB7\",\"api_url_new\":\"https://cms-fn-dmpapi.trueid.net/cms-fncontentdetail/v2/?id=O7Mm1qqmXxB7\"}
+//        """
+//        let url = string.addingPercentEncoding(withAllowedCharacters: .urlQueryAllowed) ?? ""
+//
+//        DefaultDeeplinkHandler.process(deeplink: url)
+
+        print("languageCode: \(Locale.preferredLanguages.first ?? "")")
+        print("regionCode: \(Locale.current.regionCode ?? "")")
+
+        // In case of set lang = thai and region = thai
+        // languageCode: th-TH
+        // regionCode: TH
         
-        DefaultDeeplinkHandler.process(deeplink: url)
+        // In case of set lang = Indonesia and region = thai
+        // languageCode: id-TH
+        // regionCode: TH
+        
+        // In case of set lang = Indonesia and region = Vietnam
+        // languageCode: id-VN
+        // regionCode: VN
+
         return true
     }
     

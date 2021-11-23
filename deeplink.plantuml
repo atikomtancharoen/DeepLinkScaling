@@ -1,30 +1,23 @@
 @startuml DeepLink
 !theme blueprint
-App -> CoreMod : process(:deeplink)
-note left: The deeplink should have country \ncode, module name, version\nEx: th/read/v1/<content_id>
-CoreMod -> CoreMod: Get submodule from\ndeeplink
-loop SubMod1..n
-    alt Bool = false
-        CoreMod -> SubMod1..n: submodule.matches(:deeplink)
-        SubMod1..n --> CoreMod: Return false
-    else Bool = true
-        CoreMod -> SubMod1..n: submodule.matches(:deeplink)
-        SubMod1..n --> CoreMod: Return true
-        CoreMod -> CoreMod: Break looping
+title Deeplink Cycle
+
+App -> CoreMod : Process deeplink
+
+loop subMod
+    CoreMod -> CoreMod: Check submodule conform to a DeeplinkHandler protocol
+    CoreMod -> SubMod: Get DeeplinkProessor
+    SubMod -> SubMod: Searches for a processor\nthat matches the input
+    
+    alt match
+        SubMod --> CoreMod: Return DeeplinkProcessor
+        CoreMod -> SubMod: Executes the DeeplinkProessor
+
+    else not match
+        SubMod --> CoreMod: Return Null
     end
 end
-
-alt Bool = false
-    CoreMod -> CoreMod: handle error case
-else Bool = true
-    CoreMod -> SubMod1..n: submodule.execute(:deeplink)
-    alt If the feature is off
-        SubMod1..n -> SubMod1..n: Display error
-    else If not found the content
-        SubMod1..n -> SubMod1..n: Display error
-    else If can display feature
-        SubMod1..n -> SubMod1..n: Display the feature
-    end
-end
-
+    
+CoreMod --> App : Return DeeplinkResultType
+App -> App : Return Handle failure cases (if need)
 @enduml
